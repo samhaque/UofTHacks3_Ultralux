@@ -14,6 +14,9 @@ public class CameraPreview implements SurfaceHolder.Callback, Camera.PreviewCall
     Parameters parameters;
 
     private int frame = 2;
+    private int taken = 0;
+    private long sec = System.currentTimeMillis() / 1000;
+    private int fps = 1;
 
     public CameraPreview(int PreviewlayoutWidth, int PreviewlayoutHeight, MyActivity activity)
     {
@@ -27,7 +30,22 @@ public class CameraPreview implements SurfaceHolder.Callback, Camera.PreviewCall
     {
         // call myActivity's onPreviewFrame every time we get a preview frame
         // restrict to 10 fps
+        if (frame == 2) {
             myActivity.onPreviewFrame(arg0);
+            frame = 0;
+        } else {
+            ++frame;
+        }
+        //myActivity.onPreviewFrame(Byte.toString(arg0[0]));
+        /*
+        long currentSec = System.currentTimeMillis() / 1000;
+        if (currentSec == sec) {
+            ++fps;
+        } else {
+            sec = currentSec;
+            myActivity.onPreviewFrame(Long.toString(fps));
+            fps = 1;
+        }*/
     }
 
     @Override
@@ -36,6 +54,8 @@ public class CameraPreview implements SurfaceHolder.Callback, Camera.PreviewCall
         parameters = mCamera.getParameters();
         parameters.setPreviewSize(PreviewSizeWidth, PreviewSizeHeight);
         parameters.setPictureSize(PreviewSizeWidth, PreviewSizeHeight);
+        parameters.setAutoExposureLock(true);
+
         mCamera.setParameters(parameters);
         mCamera.startPreview();
     }

@@ -47,14 +47,18 @@ public class MyActivity extends Activity {
     // executes every time the preview gets a frame
     public void onPreviewFrame(byte[] array) {
         int yValue = array[0];
-        if (yValue > 30) {
+        if (yValue > -20) {
             message += "0 ";
         } else {
             message += "1 ";
         }
-        if (message.length() > 80) {
+        if (message.length() > 224) {
             message = message.substring(2);
         }
         textView.setText(message);
+    }
+
+    public void onPreviewFrame(String exposure) {
+        textView.setText(exposure);
     }
 }
