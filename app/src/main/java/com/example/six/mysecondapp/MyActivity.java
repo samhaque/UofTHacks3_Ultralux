@@ -20,6 +20,8 @@ public class MyActivity extends Activity {
     private int PreviewSizeHeight= 120;
     TextView textView;
 
+    private String message = "";
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -42,7 +44,17 @@ public class MyActivity extends Activity {
         textView = (TextView) findViewById(R.id.text);
     }
 
-    public void onPreviewFrame() {
-        // executes every time the preview gets a frame
+    // executes every time the preview gets a frame
+    public void onPreviewFrame(byte[] array) {
+        int yValue = array[0];
+        if (yValue > 30) {
+            message += "0 ";
+        } else {
+            message += "1 ";
+        }
+        if (message.length() > 80) {
+            message = message.substring(2);
+        }
+        textView.setText(message);
     }
 }

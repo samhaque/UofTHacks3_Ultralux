@@ -3,7 +3,6 @@ package com.example.six.mysecondapp;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.view.SurfaceHolder;
-
 import java.io.IOException;
 
 public class CameraPreview implements SurfaceHolder.Callback, Camera.PreviewCallback
@@ -13,6 +12,8 @@ public class CameraPreview implements SurfaceHolder.Callback, Camera.PreviewCall
     private int PreviewSizeHeight;
     private MyActivity myActivity;
     Parameters parameters;
+
+    private int frame = 2;
 
     public CameraPreview(int PreviewlayoutWidth, int PreviewlayoutHeight, MyActivity activity)
     {
@@ -25,7 +26,8 @@ public class CameraPreview implements SurfaceHolder.Callback, Camera.PreviewCall
     public void onPreviewFrame(byte[] arg0, Camera arg1)
     {
         // call myActivity's onPreviewFrame every time we get a preview frame
-        myActivity.onPreviewFrame();
+        // restrict to 10 fps
+            myActivity.onPreviewFrame(arg0);
     }
 
     @Override
