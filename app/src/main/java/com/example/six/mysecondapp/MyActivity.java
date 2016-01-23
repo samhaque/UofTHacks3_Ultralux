@@ -1,10 +1,7 @@
 package com.example.six.mysecondapp;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup.LayoutParams;
@@ -24,9 +21,9 @@ public class MyActivity extends Activity {
 
     TextView textView;
 
-    private static final int inputChars = 256;        // number of input chars
-    private static final int L = 4096;       // number of codewords = 2^W
-    private static final int W = 12;         // codeword width
+    private static final int inputChars = 256;  // number of input chars
+    private static final int L = 4096;          // number of codewords = 2^W
+    private static final int W = 12;            // codeword width
 
     private String message = "";
 
