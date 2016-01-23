@@ -51,18 +51,7 @@ public class MyActivity extends Activity {
         mainLayout.addView(camView, new LayoutParams(PreviewSizeWidth, PreviewSizeHeight));
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event)
-    {
-        return true;
-    };
-
     public void sayHi(Bitmap bitmap) {
-        int pixel = bitmap.getPixel(0, 0);
-        int r = Color.red(pixel);
-        int g = Color.green(pixel);
-        int b = Color.blue(pixel);
-        String s = "(" + r + ", " + g + ", " + b + ")";
-        textView.setText(s);
+        textView.setText("Hi");
     }
 }

@@ -24,13 +24,8 @@ public class CameraPreview implements SurfaceHolder.Callback, Camera.PreviewCall
     private Camera mCamera = null;
     private int PreviewSizeWidth;
     private int PreviewSizeHeight;
-    private String NowPictureFileName;
-    private Boolean TakePicture = false;
-    int i = 0;
     private MyActivity activity;
     Parameters parameters;
-
-    int sec = 100;
 
     public CameraPreview(int PreviewlayoutWidth, int PreviewlayoutHeight, MyActivity activity)
     {
@@ -42,20 +37,7 @@ public class CameraPreview implements SurfaceHolder.Callback, Camera.PreviewCall
     @Override
     public void onPreviewFrame(byte[] arg0, Camera arg1)
     {
-        // At preview mode, the frame data will push to here.
-        // But we do not want these data.
-        if (sec == 100) {
-            YuvImage yuvimage=new YuvImage(arg0, ImageFormat.NV21, PreviewSizeWidth, PreviewSizeHeight, null);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-            yuvimage.compressToJpeg(new Rect(0, 0, PreviewSizeWidth, PreviewSizeHeight), 80, baos);
-            byte[] jdata = baos.toByteArray();
-            Bitmap bmp = BitmapFactory.decodeByteArray(jdata, 0, jdata.length);
-            activity.sayHi(bmp);
-            sec = 0;
-        } else {
-            ++sec;
-        }
+        // This will be executed on every frame.
     }
 
 
@@ -63,22 +45,9 @@ public class CameraPreview implements SurfaceHolder.Callback, Camera.PreviewCall
     public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3)
     {
         parameters = mCamera.getParameters();
-        // Set the camera preview size
         parameters.setPreviewSize(PreviewSizeWidth, PreviewSizeHeight);
-        // Set the take picture size, you can set the large size of the camera supported.
         parameters.setPictureSize(PreviewSizeWidth, PreviewSizeHeight);
-
-        // Turn on the camera flash.
-        String NowFlashMode = parameters.getFlashMode();
-        if ( NowFlashMode != null )
-            parameters.setFlashMode(Parameters.FLASH_MODE_ON);
-        // Set the auto-focus.
-        String NowFocusMode = parameters.getFocusMode ();
-        if ( NowFocusMode != null )
-            parameters.setFocusMode("auto");
-
         mCamera.setParameters(parameters);
-
         mCamera.startPreview();
     }
 
@@ -88,7 +57,6 @@ public class CameraPreview implements SurfaceHolder.Callback, Camera.PreviewCall
         mCamera = Camera.open();
         try
         {
-            // If did not set the SurfaceHolder, the preview area will be black.
             mCamera.setPreviewDisplay(arg0);
             mCamera.setPreviewCallback(this);
         }
@@ -107,71 +75,4 @@ public class CameraPreview implements SurfaceHolder.Callback, Camera.PreviewCall
         mCamera.release();
         mCamera = null;
     }
-
-    // Take picture interface
-    public void CameraTakePicture(String FileName)
-    {
-        TakePicture = true;
-        NowPictureFileName = FileName;
-        mCamera.autoFocus(myAutoFocusCallback);
-    }
-
-    // Set auto-focus interface
-    public void CameraStartAutoFocus()
-    {
-        TakePicture = false;
-        mCamera.autoFocus(myAutoFocusCallback);
-    }
-
-
-    //=================================
-    //
-    // AutoFocusCallback
-    //
-    //=================================
-    AutoFocusCallback myAutoFocusCallback = new AutoFocusCallback()
-    {
-        public void onAutoFocus(boolean arg0, Camera NowCamera)
-        {
-            if ( TakePicture )
-            {
-                NowCamera.stopPreview();//fixed for Samsung S2
-                NowCamera.takePicture(shutterCallback, rawPictureCallback, jpegPictureCallback);
-                TakePicture = false;
-            }
-        }
-    };
-    ShutterCallback shutterCallback = new ShutterCallback()
-    {
-        public void onShutter()
-        {
-            // Just do nothing.
-        }
-    };
-
-    PictureCallback rawPictureCallback = new PictureCallback()
-    {
-        public void onPictureTaken(byte[] arg0, Camera arg1)
-        {
-            // Just do nothing.
-        }
-    };
-
-    PictureCallback jpegPictureCallback = new PictureCallback()
-    {
-        public void onPictureTaken(byte[] data, Camera arg1)
-        {
-            // Save the picture.
-            try {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0,data.length);
-                FileOutputStream out = new FileOutputStream(NowPictureFileName);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    };
-
 }
