@@ -29,7 +29,6 @@ public class MyActivity extends Activity {
     private int PreviewSizeHeight= Resources.getSystem().getDisplayMetrics().heightPixels;
 
     TextView textView;
-    TextView resultView;
 
     private boolean listening = false;
     private boolean messageStarted = false;
@@ -142,7 +141,6 @@ public class MyActivity extends Activity {
         }
         // make sure that length of message is divisible by 8
         // the last few remaining bits are 0 and can be discarded
-        resultView.setText(result);
     }
 
     public void onPreviewFrame(String exposure) {
